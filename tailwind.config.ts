@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,15 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Custom colors for Trophic Cascade
+				cascade: {
+					blue: '#0056D2',
+					'blue-light': '#0061FF',
+					'off-white': '#F8F9FA',
+					'gray-light': '#E9ECEF',
+					'gray': '#6C757D',
+					'gray-dark': '#343A40',
 				}
 			},
 			borderRadius: {
@@ -84,11 +94,34 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'fade-in': {
+					'0%': { opacity: '0', transform: 'translateY(10px)' },
+					'100%': { opacity: '1', transform: 'translateY(0)' }
+				},
+				'fade-in-slow': {
+					'0%': { opacity: '0' },
+					'100%': { opacity: '1' }
+				},
+				'slide-up': {
+					'0%': { transform: 'translateY(20px)', opacity: '0' },
+					'100%': { transform: 'translateY(0)', opacity: '1' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.7s ease-in-out forwards',
+				'fade-in-slow': 'fade-in-slow 1.2s ease-in-out forwards',
+				'slide-up': 'slide-up 0.8s ease-out forwards'
+			},
+			fontFamily: {
+				'serif': ['DM Serif Display', 'Merriweather', 'serif'],
+				'sans': ['Inter', 'Lato', 'sans-serif']
+			},
+			backgroundImage: {
+				'subtle-texture': 'url(/subtle-texture.png)',
+				'gradient-radial': 'radial-gradient(circle, var(--tw-gradient-stops))',
 			}
 		}
 	},
