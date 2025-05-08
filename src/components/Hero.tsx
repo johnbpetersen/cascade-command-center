@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import CanvasBackground from './CanvasBackground';
@@ -5,7 +6,7 @@ import CanvasBackground from './CanvasBackground';
 const Hero = () => {
   return (
     <section
-      className="relative min-h-screen flex items-center pt-16 pb-24" // Removed overflow-hidden
+      className="relative min-h-screen flex items-center pt-16 pb-24"
       id="hero"
     >
       <CanvasBackground />
