@@ -1,44 +1,16 @@
 
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { useFrame, Canvas, extend, useThree } from '@react-three/fiber';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-
-// Extend Three with OrbitControls
-extend({ OrbitControls });
-
-// Custom camera controls
-const CameraControls = () => {
-  const { camera, gl } = useThree();
-  const controlsRef = useRef<any>();
-  
-  useFrame(() => {
-    if (controlsRef.current) {
-      controlsRef.current.update();
-    }
-  });
-  
-  return (
-    // @ts-ignore
-    <orbitControls
-      ref={controlsRef}
-      args={[camera, gl.domElement]}
-      enableDamping
-      dampingFactor={0.05}
-      enableZoom={false}
-      enablePan={false}
-      enableRotate={false}
-    />
-  );
-};
+import { useFrame, Canvas } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
 
 // Flowing thread component
 const FlowingThread = () => {
   const meshRef = useRef<THREE.Mesh>(null);
   const materialRef = useRef<THREE.ShaderMaterial>(null);
-  const curveRef = useRef<THREE.CatmullRomCurve3>(null);
+  const curve = useRef<THREE.CatmullRomCurve3>(null);
   
-  // Initialize curve
+  // Initialize curve on component mount
   useEffect(() => {
     // Create a smooth, S-shaped curve
     const points = [
@@ -49,9 +21,10 @@ const FlowingThread = () => {
       new THREE.Vector3(10, -1, 0)
     ];
     
-    curveRef.current = new THREE.CatmullRomCurve3(points);
-    curveRef.current.curveType = 'catmullrom';
-    curveRef.current.tension = 0.2;
+    // Create the curve and assign it to the ref
+    curve.current = new THREE.CatmullRomCurve3(points);
+    curve.current.curveType = 'catmullrom';
+    curve.current.tension = 0.2;
   }, []);
 
   // Animation loop
@@ -117,10 +90,15 @@ const FlowingThread = () => {
     }
   `;
 
+  // Only render when curve is initialized
+  if (!curve.current) return null;
+
   return (
     <mesh ref={meshRef} rotation={[0, 0, Math.PI / 6]}>
-      <tubeGeometry args={[curveRef.current, 120, 0.4, 8, false]} />
-      <shaderMaterial 
+      <tubeGeometry 
+        args={[curve.current, 120, 0.4, 8, false]} 
+      />
+      <shaderMaterial
         ref={materialRef}
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}
@@ -139,8 +117,9 @@ const FlowingThread = () => {
 const SecondThread = () => {
   const meshRef = useRef<THREE.Mesh>(null);
   const materialRef = useRef<THREE.ShaderMaterial>(null);
-  const curveRef = useRef<THREE.CatmullRomCurve3>(null);
+  const curve = useRef<THREE.CatmullRomCurve3>(null);
   
+  // Initialize curve on component mount
   useEffect(() => {
     const points = [
       new THREE.Vector3(-8, 3, 1),
@@ -149,11 +128,13 @@ const SecondThread = () => {
       new THREE.Vector3(8, -2, 1)
     ];
     
-    curveRef.current = new THREE.CatmullRomCurve3(points);
-    curveRef.current.curveType = 'catmullrom';
-    curveRef.current.tension = 0.3;
+    // Create the curve and assign it to the ref
+    curve.current = new THREE.CatmullRomCurve3(points);
+    curve.current.curveType = 'catmullrom';
+    curve.current.tension = 0.3;
   }, []);
 
+  // Animation loop
   useFrame(({ clock }) => {
     if (!materialRef.current || !meshRef.current) return;
     
@@ -166,6 +147,7 @@ const SecondThread = () => {
     }
   });
 
+  // Shader for the flowing effect
   const vertexShader = `
     varying vec2 vUv;
     varying vec3 vPosition;
@@ -214,10 +196,15 @@ const SecondThread = () => {
     }
   `;
 
+  // Only render when curve is initialized
+  if (!curve.current) return null;
+
   return (
     <mesh ref={meshRef} rotation={[0, 0, -Math.PI / 8]} position={[0, -2, 0]}>
-      <tubeGeometry args={[curveRef.current, 100, 0.3, 8, false]} />
-      <shaderMaterial 
+      <tubeGeometry 
+        args={[curve.current, 100, 0.3, 8, false]} 
+      />
+      <shaderMaterial
         ref={materialRef}
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}
@@ -237,7 +224,11 @@ const FlowingScene = () => {
   return (
     <>
       <ambientLight intensity={0.8} />
-      <CameraControls />
+      <OrbitControls 
+        enableZoom={false}
+        enablePan={false}
+        enableRotate={false}
+      />
       <FlowingThread />
       <SecondThread />
     </>
