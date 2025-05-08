@@ -1,169 +1,268 @@
 
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { useFrame, Canvas, extend, useThree } from '@react-three/fiber';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-export default function CanvasBackground() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const requestRef = useRef<number>();
+// Extend Three with OrbitControls
+extend({ OrbitControls });
+
+// Custom camera controls
+const CameraControls = () => {
+  const { camera, gl } = useThree();
+  const controlsRef = useRef<any>();
   
-  useEffect(() => {
-    if (!containerRef.current) return;
-    
-    // Setup
-    let width = containerRef.current.clientWidth;
-    let height = containerRef.current.clientHeight;
-    
-    // Scene setup
-    const scene = new THREE.Scene();
-    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-    
-    // Renderer
-    const renderer = new THREE.WebGLRenderer({ 
-      alpha: true,
-      antialias: true
-    });
-    renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    containerRef.current.appendChild(renderer.domElement);
-    
-    // Shader material
-    const vertexShader = `
-      varying vec2 vUv;
-      
-      void main() {
-        vUv = uv;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    `;
-    
-    const fragmentShader = `
-      varying vec2 vUv;
-      uniform float uTime;
-      
-      // Simplex 2D noise function
-      vec3 permute(vec3 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
-      
-      float snoise(vec2 v) {
-        const vec4 C = vec4(0.211324865405187,
-                            0.366025403784439,
-                           -0.577350269189626,
-                            0.024390243902439);
-        vec2 i  = floor(v + dot(v, C.yy));
-        vec2 x0 = v -   i + dot(i, C.xx);
-        vec2 i1;
-        i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-        vec4 x12 = x0.xyxy + C.xxzz;
-        x12.xy -= i1;
-        i = mod(i, 289.0);
-        vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))
-          + i.x + vec3(0.0, i1.x, 1.0 ));
-        vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy),
-          dot(x12.zw,x12.zw)), 0.0);
-        m = m*m ;
-        m = m*m ;
-        vec3 x = 2.0 * fract(p * C.www) - 1.0;
-        vec3 h = abs(x) - 0.5;
-        vec3 ox = floor(x + 0.5);
-        vec3 a0 = x - ox;
-        m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
-        vec3 g;
-        g.x  = a0.x  * x0.x  + h.x  * x0.y;
-        g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-        return 130.0 * dot(m, g);
-      }
-      
-      void main() {
-        // Create a slower flowing effect
-        float slowTime = uTime * 0.1;
-        
-        // Generate multiple noise layers with different scales and speeds
-        float noise1 = snoise(vec2(vUv.x * 1.5 + slowTime * 0.2, vUv.y * 1.5 - slowTime * 0.1)) * 0.5 + 0.5;
-        float noise2 = snoise(vec2(vUv.x * 3.0 - slowTime * 0.15, vUv.y * 2.0 + slowTime * 0.05)) * 0.25 + 0.75;
-        
-        // Calculate distance from center for radial gradient
-        vec2 center = vec2(0.5);
-        float dist = distance(vUv, center);
-        float radialGradient = smoothstep(0.8, 0.2, dist);
-        
-        // Blue primary color for Trophic Cascade
-        vec3 blueColor = vec3(0.0, 0.337, 0.824); // #0056D2
-        vec3 lightBlueColor = vec3(0.0, 0.38, 1.0); // #0061FF
-        vec3 deepBlueColor = vec3(0.0, 0.22, 0.6); // Deeper variation
-        
-        // Create a flowing, liquid-like effect
-        float flowEffect = noise1 * noise2;
-        
-        // Blend between blue tones based on the noise
-        vec3 finalColor = mix(deepBlueColor, lightBlueColor, flowEffect);
-        
-        // Apply radial gradient for a vignette effect
-        finalColor = mix(vec3(1.0), finalColor, radialGradient * 0.7);
-        
-        // Adjust opacity for subtle background
-        float opacity = radialGradient * 0.15; // Very subtle
-        
-        gl_FragColor = vec4(finalColor, opacity);
-      }
-    `;
-    
-    // Create a plane with the shader
-    const geometry = new THREE.PlaneGeometry(2, 2);
-    const material = new THREE.ShaderMaterial({
-      vertexShader,
-      fragmentShader,
-      uniforms: {
-        uTime: { value: 0 },
-      },
-      transparent: true,
-      depthTest: false,
-    });
-    
-    const plane = new THREE.Mesh(geometry, material);
-    scene.add(plane);
-    
-    // Animation
-    const animate = (time: number) => {
-      material.uniforms.uTime.value = time * 0.001;
-      renderer.render(scene, camera);
-      requestRef.current = requestAnimationFrame(animate);
-    };
-    
-    requestRef.current = requestAnimationFrame(animate);
-    
-    // Handle resize
-    const handleResize = () => {
-      if (!containerRef.current) return;
-      
-      width = containerRef.current.clientWidth;
-      height = containerRef.current.clientHeight;
-      
-      renderer.setSize(width, height);
-    };
-    
-    window.addEventListener('resize', handleResize);
-    
-    // Cleanup
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      if (requestRef.current) {
-        cancelAnimationFrame(requestRef.current);
-      }
-      if (containerRef.current && renderer.domElement) {
-        containerRef.current.removeChild(renderer.domElement);
-      }
-      
-      // Dispose of Three.js objects
-      geometry.dispose();
-      material.dispose();
-      renderer.dispose();
-    };
-  }, []);
+  useFrame(() => {
+    if (controlsRef.current) {
+      controlsRef.current.update();
+    }
+  });
   
   return (
-    <div
-      ref={containerRef}
-      className="absolute inset-0 w-full h-full z-[-1] overflow-hidden"
-      aria-hidden="true"
+    // @ts-ignore
+    <orbitControls
+      ref={controlsRef}
+      args={[camera, gl.domElement]}
+      enableDamping
+      dampingFactor={0.05}
+      enableZoom={false}
+      enablePan={false}
+      enableRotate={false}
     />
+  );
+};
+
+// Flowing thread component
+const FlowingThread = () => {
+  const meshRef = useRef<THREE.Mesh>(null);
+  const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const curveRef = useRef<THREE.CatmullRomCurve3>(null);
+  
+  // Initialize curve
+  useEffect(() => {
+    // Create a smooth, S-shaped curve
+    const points = [
+      new THREE.Vector3(-10, -2, 0),
+      new THREE.Vector3(-5, 2, -3),
+      new THREE.Vector3(0, -0.5, -1),
+      new THREE.Vector3(5, 3, 2),
+      new THREE.Vector3(10, -1, 0)
+    ];
+    
+    curveRef.current = new THREE.CatmullRomCurve3(points);
+    curveRef.current.curveType = 'catmullrom';
+    curveRef.current.tension = 0.2;
+  }, []);
+
+  // Animation loop
+  useFrame(({ clock }) => {
+    if (!materialRef.current || !meshRef.current) return;
+    
+    const time = clock.getElapsedTime() * 0.2;
+    materialRef.current.uniforms.uTime.value = time;
+    
+    // Subtle movement of the entire mesh
+    if (meshRef.current) {
+      meshRef.current.rotation.y = Math.sin(time * 0.2) * 0.05;
+      meshRef.current.rotation.x = Math.sin(time * 0.1) * 0.03;
+    }
+  });
+
+  // Shader for the flowing effect
+  const vertexShader = `
+    varying vec2 vUv;
+    varying vec3 vPosition;
+    uniform float uTime;
+    
+    void main() {
+      vUv = uv;
+      vPosition = position;
+      
+      // Calculate wave effect
+      float wave = sin(position.x * 0.05 + uTime) * 0.2;
+      vec3 newPos = position;
+      newPos.y += wave;
+      newPos.z += sin(position.x * 0.08 + uTime * 1.2) * 0.1;
+      
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(newPos, 1.0);
+    }
+  `;
+
+  const fragmentShader = `
+    varying vec2 vUv;
+    varying vec3 vPosition;
+    uniform float uTime;
+    
+    // Color variables
+    vec3 colorA = vec3(0.0, 0.34, 0.82); // Main Cascade blue
+    vec3 colorB = vec3(0.0, 0.38, 1.0);  // Light blue
+    vec3 colorC = vec3(0.9, 0.9, 1.0);   // Almost white
+    
+    void main() {
+      // Flow effect based on position and time
+      float flow = sin(vUv.x * 10.0 + uTime) * 0.5 + 0.5;
+      
+      // Distance from center line for edge glow
+      float centerLine = abs(vUv.y - 0.5) * 2.0;
+      float edgeGlow = pow(1.0 - centerLine, 3.0);
+      
+      // Combine colors based on the flow and edge glow
+      vec3 finalColor = mix(colorA, colorB, flow);
+      finalColor = mix(finalColor, colorC, pow(edgeGlow, 2.0) * 0.7);
+      
+      // Opacity based on edge
+      float opacity = edgeGlow * 0.7;
+      
+      gl_FragColor = vec4(finalColor, opacity);
+    }
+  `;
+
+  return (
+    <mesh ref={meshRef} rotation={[0, 0, Math.PI / 6]}>
+      <tubeGeometry args={[curveRef.current, 120, 0.4, 8, false]} />
+      <shaderMaterial 
+        ref={materialRef}
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+        uniforms={{
+          uTime: { value: 0 }
+        }}
+        transparent={true}
+        depthWrite={false}
+        side={THREE.DoubleSide}
+      />
+    </mesh>
+  );
+};
+
+// Second flowing thread with different parameters
+const SecondThread = () => {
+  const meshRef = useRef<THREE.Mesh>(null);
+  const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const curveRef = useRef<THREE.CatmullRomCurve3>(null);
+  
+  useEffect(() => {
+    const points = [
+      new THREE.Vector3(-8, 3, 1),
+      new THREE.Vector3(-3, -3, -2),
+      new THREE.Vector3(2, 1, 0),
+      new THREE.Vector3(8, -2, 1)
+    ];
+    
+    curveRef.current = new THREE.CatmullRomCurve3(points);
+    curveRef.current.curveType = 'catmullrom';
+    curveRef.current.tension = 0.3;
+  }, []);
+
+  useFrame(({ clock }) => {
+    if (!materialRef.current || !meshRef.current) return;
+    
+    const time = clock.getElapsedTime() * 0.15;
+    materialRef.current.uniforms.uTime.value = time;
+    
+    if (meshRef.current) {
+      meshRef.current.rotation.y = Math.sin(time * 0.15) * 0.03;
+      meshRef.current.rotation.x = Math.sin(time * 0.08) * 0.02;
+    }
+  });
+
+  const vertexShader = `
+    varying vec2 vUv;
+    varying vec3 vPosition;
+    uniform float uTime;
+    
+    void main() {
+      vUv = uv;
+      vPosition = position;
+      
+      // Calculate wave effect - different parameters than first thread
+      float wave = sin(position.x * 0.03 + uTime * 0.8) * 0.3;
+      vec3 newPos = position;
+      newPos.y += wave;
+      newPos.z += sin(position.x * 0.05 + uTime * 0.9) * 0.15;
+      
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(newPos, 1.0);
+    }
+  `;
+
+  const fragmentShader = `
+    varying vec2 vUv;
+    varying vec3 vPosition;
+    uniform float uTime;
+    
+    // Slightly different colors
+    vec3 colorA = vec3(0.0, 0.3, 0.7); // Deeper blue
+    vec3 colorB = vec3(0.1, 0.4, 0.9); // Mid blue
+    vec3 colorC = vec3(0.8, 0.9, 1.0); // Light blue/white
+    
+    void main() {
+      // Flow effect with different frequency
+      float flow = sin(vUv.x * 8.0 + uTime * 1.2) * 0.5 + 0.5;
+      
+      // Distance from center for edge glow
+      float centerLine = abs(vUv.y - 0.5) * 2.0;
+      float edgeGlow = pow(1.0 - centerLine, 2.5);
+      
+      // Combine colors
+      vec3 finalColor = mix(colorA, colorB, flow);
+      finalColor = mix(finalColor, colorC, pow(edgeGlow, 1.8) * 0.6);
+      
+      // Slightly more transparent
+      float opacity = edgeGlow * 0.5;
+      
+      gl_FragColor = vec4(finalColor, opacity);
+    }
+  `;
+
+  return (
+    <mesh ref={meshRef} rotation={[0, 0, -Math.PI / 8]} position={[0, -2, 0]}>
+      <tubeGeometry args={[curveRef.current, 100, 0.3, 8, false]} />
+      <shaderMaterial 
+        ref={materialRef}
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+        uniforms={{
+          uTime: { value: 0 }
+        }}
+        transparent={true}
+        depthWrite={false}
+        side={THREE.DoubleSide}
+      />
+    </mesh>
+  );
+};
+
+// Main scene component for the flowing thread animation
+const FlowingScene = () => {
+  return (
+    <>
+      <ambientLight intensity={0.8} />
+      <CameraControls />
+      <FlowingThread />
+      <SecondThread />
+    </>
+  );
+};
+
+// Main Container Component
+export default function CanvasBackground() {
+  return (
+    <div className="absolute inset-0 w-full h-full z-[-1] overflow-hidden opacity-60">
+      <Canvas
+        camera={{
+          position: [0, 0, 15],
+          fov: 50,
+          near: 0.1,
+          far: 1000
+        }}
+        gl={{
+          antialias: true,
+          alpha: true,
+        }}
+        style={{ background: 'transparent' }}
+      >
+        <FlowingScene />
+      </Canvas>
+    </div>
   );
 }
