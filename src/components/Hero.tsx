@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import CanvasBackground from './CanvasBackground';
@@ -6,11 +5,13 @@ import CanvasBackground from './CanvasBackground';
 const Hero = () => {
   return (
     <section
-      className="relative min-h-screen flex items-center pt-16 pb-24"
+      className="relative min-h-screen flex items-center pt-16 pb-24 overflow-hidden"
       id="hero"
     >
+      {/* <-- Three.js background */}
       <CanvasBackground />
 
+      {/* <-- Your existing Hero content */}
       <div className="container-custom relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-7 order-2 lg:order-1">
