@@ -7,7 +7,7 @@ const TestimonialQuote: React.FC = () => {
       className="relative bg-cover bg-center bg-no-repeat py-24"
       style={{
         // Unsplash image URL
-        backgroundImage: 'url(/public/images/yellowstone.jpg)',
+        backgroundImage: 'url(/images/yellowstone.jpg)',
         backgroundColor: 'rgba(79, 70, 229, 0.4)',
         backgroundBlendMode: 'overlay',
       }}
