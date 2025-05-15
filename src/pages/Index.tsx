@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
+import TrophicDefinition from '@/components/TrophicDefinition';
 import About from '@/components/About';
 import Services from '@/components/Services';
 import Approach from '@/components/Approach';
@@ -37,6 +38,7 @@ const Index = () => {
     <div className="min-h-screen bg-cascade-off-white">
       <Navbar />
       <Hero />
+      <TrophicDefinition />
       <About />
       <Services />
       <Approach />

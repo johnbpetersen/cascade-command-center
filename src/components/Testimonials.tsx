@@ -18,7 +18,7 @@ const Testimonials = () => {
       <div className="container-custom">
         <div className="max-w-4xl mx-auto text-center mb-12">
           <h2 className="font-serif text-4xl md:text-5xl mb-6 opacity-0 animate-fade-in [animation-delay:0.2s] [animation-fill-mode:forwards] [animation-play-state:paused]">
-            Success <span className="text-gradient">Stories</span>
+            What People Are <span className="text-gradient">Saying</span>
           </h2>
           <p className="text-lg text-cascade-gray opacity-0 animate-fade-in [animation-delay:0.4s] [animation-fill-mode:forwards] [animation-play-state:paused]">
             Hear from leaders who have experienced transformative growth through our programs.

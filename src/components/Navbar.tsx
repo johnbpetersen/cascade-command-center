@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -42,12 +41,10 @@ const Navbar = () => {
         </a>
         
         {/* Desktop navigation */}
-        <div className="hidden md:flex items-center space-x-1">
-          <a href="#about" className="nav-link">About</a>
-          <a href="#services" className="nav-link">Services</a>
-          <a href="#approach" className="nav-link">Approach</a>
-          <a href="#testimonials" className="nav-link">Testimonials</a>
-          <a href="#contact" className="btn-primary ml-4">Contact Us</a>
+        <div className="hidden md:flex items-center space-x-4">
+          <a href="#bio" className="nav-link">Bio</a>
+          <a href="#credentials" className="nav-link">Credentials</a>
+          <a href="#contact" className="btn-primary">Contact</a>
         </div>
         
         {/* Mobile menu button */}
@@ -63,11 +60,9 @@ const Navbar = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-white absolute w-full py-4 shadow-md animate-fade-in">
           <div className="container-custom flex flex-col space-y-3">
-            <a href="#about" className="nav-link py-2" onClick={() => setIsMenuOpen(false)}>About</a>
-            <a href="#services" className="nav-link py-2" onClick={() => setIsMenuOpen(false)}>Services</a>
-            <a href="#approach" className="nav-link py-2" onClick={() => setIsMenuOpen(false)}>Approach</a>
-            <a href="#testimonials" className="nav-link py-2" onClick={() => setIsMenuOpen(false)}>Testimonials</a>
-            <a href="#contact" className="btn-primary inline-block text-center" onClick={() => setIsMenuOpen(false)}>Contact Us</a>
+            <a href="#bio" className="nav-link py-2" onClick={() => setIsMenuOpen(false)}>Bio</a>
+            <a href="#credentials" className="nav-link py-2" onClick={() => setIsMenuOpen(false)}>Credentials</a>
+            <a href="#contact" className="btn-primary inline-block text-center" onClick={() => setIsMenuOpen(false)}>Contact</a>
           </div>
         </div>
       )}

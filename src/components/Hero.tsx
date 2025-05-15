@@ -19,7 +19,7 @@ const Hero = () => {
               className="inline-block text-cascade-blue font-medium mb-3
                          opacity-0 animate-fade-in [animation-delay:0.2s]"
             >
-              LEADERSHIP DEVELOPMENT
+              CAN YOU BE THE NEXT TROPHIC CASCADE?
             </span>
             <h1
               className="font-serif text-5xl sm:text-6xl md:text-7xl leading-tight
@@ -48,7 +48,7 @@ const Hero = () => {
                 href="#services"
                 className="btn-primary flex items-center justify-center gap-2 group"
               >
-                Explore Our Approach
+                Book a Free Consultation
                 <ArrowRight
                   size={18}
                   className="transition-transform group-hover:translate-x-1"
@@ -59,11 +59,6 @@ const Hero = () => {
                 className="text-cascade-gray-dark hover:text-cascade-blue
                            transition-colors duration-200 font-medium flex items-center gap-1"
               >
-                <span>View Success Stories</span>
-                <ArrowRight
-                  size={16}
-                  className="transition-transform group-hover:translate-x-1"
-                />
               </a>
             </div>
           </div>
