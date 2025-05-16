@@ -6,10 +6,12 @@ const TestimonialQuote: React.FC = () => {
       id="testimonial-quote"
       className="relative bg-cover bg-center bg-no-repeat py-24"
       style={{
-        // Unsplash image URL
         backgroundImage: 'url(/images/yellowstone.jpg)',
         backgroundColor: 'rgba(79, 70, 229, 0.4)',
         backgroundBlendMode: 'overlay',
+        backgroundAttachment: 'fixed', // Enables subtle parallax
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
       }}
     >
       <div className="container mx-auto px-4">

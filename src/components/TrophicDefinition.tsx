@@ -1,21 +1,19 @@
-// src/components/TrophicDefinition.tsx
 import React from 'react';
 
 const TrophicDefinition = () => {
   return (
     <section
       id="trophic-cascade-definition"
-      className="relative py-32 overflow-hidden bg-gradient-to-r from-cascade-blue to-cascade-blue-light"
+      className="relative py-32 overflow-hidden bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage: 'url(/images/water-background.jpg)',
+        backgroundAttachment: 'fixed', // Subtle parallax effect
+      }}
     >
-      {/* Placeholder image background */}
-      <div className="absolute inset-0">
-  <img
-    src="/images/water-background.jpg"
-    alt="Background placeholder"
-    className="w-full h-full object-cover opacity-30"
-  />
-</div>
-      {/* Decorative blobs */}
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-cascade-blue to-cascade-blue-light opacity-30" />
+
+      {/* Decorative Blobs */}
       <div className="absolute -top-16 -left-16 w-64 h-64 bg-cascade-blue-light rounded-full opacity-20 filter blur-xl animate-pulse" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-cascade-blue rounded-full opacity-20 filter blur-2xl animate-pulse" />
 
