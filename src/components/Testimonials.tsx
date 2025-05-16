@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 import { Card } from "@/components/ui/card";
 import { Quote } from "lucide-react";
@@ -246,7 +247,8 @@ const Testimonials = () => {
         </div>
       </div>
       
-      <style jsx>{`
+      <style>
+        {`
         @keyframes border-flow {
           0% {
             background-position: 0% 50%;
@@ -271,7 +273,8 @@ const Testimonials = () => {
           border-image-slice: 1;
           animation: border-flow 4s linear infinite;
         }
-      `}</style>
+      `}
+      </style>
     </section>
   );
 };
