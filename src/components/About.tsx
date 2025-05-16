@@ -1,21 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
-import DotDivider from './DotDivider';
-import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 import { Button } from './ui/button';
-import { Separator } from './ui/separator';
 import { ArrowRight } from 'lucide-react';
-import { Badge } from './ui/badge';
-import { Slider } from './ui/slider';
+import DotDivider from './DotDivider';
 
 const About = () => {
   const [currentImage, setCurrentImage] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
-  
-  // For portrait slider
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % portraitImages.length);
-    }, 3000);
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 
@@ -23,110 +19,101 @@ const About = () => {
     <section
       id="about"
       ref={sectionRef}
-      className="relative overflow-hidden min-h-[80vh] py-24 md:py-32"
-      style={{
-        background: "linear-gradient(to bottom right, #D6DCE3, #F4F7FA)",
-        backgroundImage: "url('/subtle-texture.png'), linear-gradient(to bottom right, #D6DCE3, #F4F7FA)",
-        backgroundBlendMode: "overlay"
-      }}
+      className="relative min-h-screen py-16 bg-gradient-to-b from-[#0E3A6D] to-[#1A2526] flex items-center justify-center"
     >
-      <div className="absolute top-0 right-0 w-full h-32 bg-gradient-to-b from-cascade-off-white to-transparent" />
+      <div className="relative container mx-auto max-w-6xl px-4 text-center">
+        {/* Header with Dot Divider */}
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="font-serif text-5xl md:text-6xl text-white mb-4"
+        >
+          Who is <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#4B9EFF] to-[#A1CFFF]">David Wolf</span>?
+        </motion.h2>
+        <motion.div
+          initial={{ opacity: 0, scaleX: 0 }}
+          whileInView={{ opacity: 1, scaleX: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <DotDivider size={8} gapX={16} className="my-6" />
+        </motion.div>
 
-      <div className="container-custom max-w-7xl px-8 md:px-16">
-        <div className="max-w-4xl mx-auto text-center mb-16">
-          <h2
-            className="
-              font-serif text-4xl md:text-5xl mb-6
-              opacity-0 animate-fade-in
-              [animation-delay:0.2s]
-              [animation-fill-mode:forwards]
-              [animation-play-state:paused]
-            "
+        {/* Vision Statement */}
+        <motion.h3
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="font-serif text-3xl md:text-4xl text-white leading-relaxed max-w-4xl mx-auto mb-16"
+        >
+          I am the <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#4B9EFF] to-[#A1CFFF]">wolf altering rivers</span>, igniting a trophic cascade in all I am and do—leading self in harmony with life and the divine. Each dawn, I rise to forge my kingdom, brick by eternal brick.
+        </motion.h3>
+
+        {/* Image and Accomplishments Side by Side */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          {/* Image Slider */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="relative w-full aspect-[4/5] max-w-md mx-auto"
           >
-            Who is <span className="text-gradient">David Wolf</span>?
-          </h2>
-
-          <DotDivider
-            size={8}
-            gapX={16}
-            className="
-              my-4
-              opacity-0 animate-fade-in
-              [animation-delay:0.3s]
-              [animation-fill-mode:forwards]
-              [animation-play-state:paused]
-            "
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-12">
-          <div className="md:col-span-3 opacity-0 animate-slide-up" 
-               style={{ animationDelay: '0.4s', animationFillMode: 'forwards', animationPlayState: 'paused' }}>
-            <h3 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold leading-tight tracking-tight mb-8">
-              I am the <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#0E3A6D] to-[#1675FF]">wolf altering rivers</span> causing the trophic cascade in all that I am and all that I do through leading self in alignment with life and the divine. Each day I wake up focused on building my kingdom brick by brick.
-            </h3>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 my-8">
-              {credentials.map((credential, idx) => (
-                <div 
-                  key={idx} 
-                  className="rounded-xl bg-white/80 shadow-lg backdrop-blur px-6 py-4 text-sm md:text-base font-medium"
-                  style={{ 
-                    animationDelay: `${0.5 + idx * 0.15}s`, 
-                    animationFillMode: 'forwards',
-                    animationPlayState: 'paused',
-                    opacity: 0 
-                  }}
-                  className="animate-fade-in"
-                >
-                  {credential}
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-8">
-              <Button
-                className="inline-flex items-center gap-2 rounded-full bg-[#0E3A6D] hover:bg-[#1675FF] text-white py-3 px-6 font-semibold shadow-md hover:scale-105 transition"
+            {portraitImages.map((image, index) => (
+              <div
+                key={index}
+                className={`absolute inset-0 transition-opacity duration-1000 ${
+                  currentImage === index ? 'opacity-100' : 'opacity-0'
+                }`}
               >
-                See Full Credentials <ArrowRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-
-          <div className="md:col-span-2 opacity-0 animate-slide-up" 
-               style={{ animationDelay: '0.6s', animationFillMode: 'forwards', animationPlayState: 'paused' }}>
-            <div className="relative aspect-[3/4] w-full mx-auto">
-              {portraitImages.map((image, index) => (
-                <div
-                  key={index}
-                  className={cn(
-                    "absolute inset-0 transition-opacity duration-1000",
-                    currentImage === index ? "opacity-100" : "opacity-0"
-                  )}
-                >
-                  <img
-                    src={image}
-                    alt={`David Wolf portrait ${index + 1}`}
-                    className="w-full h-full object-cover rounded-lg shadow-2xl outline outline-2 outline-[#0E3A6D]/40"
-                  />
-                </div>
-              ))}
-              
-              <div className="absolute -bottom-10 left-0 right-0 flex justify-center gap-2">
-                {portraitImages.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentImage(index)}
-                    className={cn(
-                      "w-2 h-2 rounded-full transition-all",
-                      currentImage === index ? "bg-cascade-blue w-6" : "bg-cascade-gray/30"
-                    )}
-                    aria-label={`View image ${index + 1}`}
-                  />
-                ))}
+                <img
+                  src={image}
+                  alt={`David Wolf portrait ${index + 1}`}
+                  className="w-full h-full object-cover rounded-xl shadow-2xl border border-white/20"
+                />
               </div>
+            ))}
+            <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-3">
+              {portraitImages.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentImage(index)}
+                  className={`w-3 h-3 rounded-full transition-all ${
+                    currentImage === index ? 'bg-[#4B9EFF] w-8' : 'bg-white/50'
+                  }`}
+                />
+              ))}
             </div>
-          </div>
+          </motion.div>
+
+          {/* Accomplishments */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+            className="space-y-4"
+          >
+            {credentials.map((credential, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: idx * 0.2 + 1 }}
+                className="bg-white/10 backdrop-blur-lg rounded-lg p-5 text-white/90 text-base font-medium border border-white/20 hover:bg-white/20 transition-all"
+              >
+                {credential}
+              </motion.div>
+            ))}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 1.6 }}
+              className="mt-6"
+            >
+              <Button className="rounded-full bg-gradient-to-r from-[#4B9EFF] to-[#A1CFFF] text-white py-3 px-8 font-semibold shadow-lg hover:scale-105 transition">
+                Full Credentials <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </motion.div>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -134,16 +121,16 @@ const About = () => {
 };
 
 const credentials = [
-  "Youngest SAP NA exec – 9 promotions in 12 yrs",
-  "5× Winners' Circle – $150k invested in elite coaching",
-  "Lean Six Sigma Black Belt – rebuilt worst → best org",
-  "Eagle Scout & amateur natural bodybuilder – multimillion net worth"
+  'Youngest SAP NA exec – 9 promotions in 12 yrs',
+  '5× Winners’ Circle – $150k in elite coaching',
+  'Lean Six Sigma Black Belt – rebuilt worst to best org',
+  'Eagle Scout & bodybuilder – multimillion net worth',
 ];
 
 const portraitImages = [
-  "/images/yellowstone.jpg", // Placeholder, replace with actual images
-  "/images/water-background.jpg",
-  "/images/logo.png"
+  '/images/wolf-profile.jpeg',
+  '/images/water-background.jpg',
+  '/images/logo.png',
 ];
 
 export default About;
