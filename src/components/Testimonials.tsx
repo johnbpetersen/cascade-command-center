@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import { Card } from "@/components/ui/card";
 import { Quote } from "lucide-react";
@@ -247,7 +246,7 @@ const Testimonials = () => {
         </div>
       </div>
       
-      <style jsx global>{`
+      <style jsx>{`
         @keyframes border-flow {
           0% {
             background-position: 0% 50%;

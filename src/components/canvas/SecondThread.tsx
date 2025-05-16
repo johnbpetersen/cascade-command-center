@@ -64,14 +64,16 @@ const SecondThread = () => {
       />
       <shaderMaterial
         ref={materialRef}
-        vertexShader={vertexShader}
-        fragmentShader={fragmentShader}
-        uniforms={{
-          uTime: { value: 0 }
-        }}
-        transparent={true}
-        depthWrite={false}
-        side={THREE.DoubleSide}
+        args={[{
+          vertexShader: vertexShader,
+          fragmentShader: fragmentShader,
+          uniforms: {
+            uTime: { value: 0 }
+          },
+          transparent: true,
+          depthWrite: false,
+          side: THREE.DoubleSide
+        }]}
       />
     </mesh>
   );
