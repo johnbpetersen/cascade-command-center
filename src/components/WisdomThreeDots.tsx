@@ -151,7 +151,9 @@ const WisdomThreeDots: React.FC = () => {
       className="relative bg-white"
     >
       <header className="absolute top-24 left-1/2 transform -translate-x-1/2 text-center px-4 z-10">
-        <h2 className="text-5xl font-serif text-indigo-900 mb-2">The Wisdom of Three Dots</h2>
+        <h2 className="text-5xl font-serif text-[#1A2526] mb-2">
+          The Wisdom of <span className="text-gradient">Three Dots</span>
+        </h2>
         <DotDivider
           size={8}
           gapX={16}
@@ -164,7 +166,7 @@ const WisdomThreeDots: React.FC = () => {
           "
         />
         <p className="max-w-[700px] text-lg text-gray-600 leading-tight mt-6">
-        At Trophic Cascade, we believe that lasting impact starts with a powerful inner harmony. These are the three pillars that turns strategic coaching into a cascading wave of growth and a leadership legacy that endures.
+          At Trophic Cascade, we believe that lasting impact starts with a powerful inner harmony. These are the three pillars that turns strategic coaching into a cascading wave of growth and a leadership legacy that endures.
         </p>
       </header>
 
