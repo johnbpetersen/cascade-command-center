@@ -1,93 +1,280 @@
 
-import React, { useState } from 'react';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+import { Card } from "@/components/ui/card";
+import { Quote } from "lucide-react";
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-const Testimonials = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  
-  const nextTestimonial = () => {
-    setActiveIndex((prev) => (prev + 1) % testimonials.length);
-  };
-  
-  const prevTestimonial = () => {
-    setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
+// Register ScrollTrigger plugin
+gsap.registerPlugin(ScrollTrigger);
 
+const testimonialsData = [
+  {
+    quote: "Working with David was a complete game-changer for my sales career. His coaching unlocked a deep confidence within me, taught me to lead with genuine connection, and gave me a vision that turned every deal into a mission.",
+    name: "Sarah Thompson",
+    title: "Senior Sales Director, Horizon Enterprises",
+    featured: true
+  },
+  {
+    quote: "The trophic cascade approach transformed my entire leadership style. I went from managing transactions to creating ecosystems of success.",
+    name: "Michael Roberts",
+    title: "Regional Sales Director, CloudForce Solutions"
+  },
+  {
+    quote: "David's coaching doesn't just improve results—it completely redefines what's possible. The ripple effect has transformed our entire organization.",
+    name: "David Chen",
+    title: "Chief Revenue Officer, DataStream"
+  },
+  {
+    quote: "Working with Trophic Cascade transformed my approach to leadership. I gained the confidence and strategic mindset to navigate complex enterprise deals with clarity and purpose.",
+    name: "Jessica Miller",
+    title: "VP of Enterprise Sales, Tech Innovations"
+  },
+  {
+    quote: "The executive presence training was revolutionary. I now lead conversations with a level of gravitas that has dramatically improved our win rates.",
+    name: "Robert Wilson",
+    title: "Account Executive, SkyFusion"
+  },
+  {
+    quote: "David's approach to sales leadership is unlike any training I've experienced in 15 years. It's not about tactics—it's about transformation.",
+    name: "Emily Zhang",
+    title: "Sales Enablement Director, NexusPoint"
+  },
+  {
+    quote: "I've worked with many coaches, but David is the only one who transformed not just my results, but my entire approach to value creation.",
+    name: "Thomas Jackson",
+    title: "Enterprise Solution Architect, Quantum Systems"
+  }
+];
+
+const TestimonialCard = ({ testimonial, index }) => {
+  const randomHeight = useRef(Math.floor(Math.random() * (360 - 220) + 220));
+  const isFeatured = testimonial.featured;
+  
   return (
-    <section id="testimonials" className="section-padding bg-white">
-      <div className="container-custom">
-        <div className="max-w-4xl mx-auto text-center mb-12">
-          <h2 className="font-serif text-4xl md:text-5xl mb-6 opacity-0 animate-fade-in [animation-delay:0.2s] [animation-fill-mode:forwards] [animation-play-state:paused]">
-            What People Are <span className="text-gradient">Saying</span>
-          </h2>
-          <p className="text-lg text-cascade-gray opacity-0 animate-fade-in [animation-delay:0.4s] [animation-fill-mode:forwards] [animation-play-state:paused]">
-            Hear from leaders who have experienced transformative growth through our programs.
+    <Card 
+      className={`glass-card opacity-0 translate-y-10 ${
+        isFeatured ? 'row-span-2 col-span-1 md:col-span-2' : ''
+      }`}
+      style={{ 
+        height: isFeatured ? 'auto' : `${randomHeight.current}px`,
+        backgroundColor: 'rgba(255, 255, 255, 0.08)',
+        backdropFilter: 'blur(12px)',
+        border: '1px solid rgba(255, 255, 255, 0.15)',
+        borderRadius: '1.5rem',
+        overflow: 'hidden',
+        transition: 'all 0.4s ease-out',
+      }}
+    >
+      <div className="relative flex flex-col p-6 h-full">
+        <div className="absolute top-6 left-6 text-[#1675FF] opacity-70">
+          <Quote size={28} className="drop-shadow-[0_0_8px_rgba(22,117,255,0.5)]" />
+        </div>
+        
+        <div className="mt-12 flex-grow">
+          <p className="text-lg md:text-xl italic text-[#F4F7FA]/95 leading-relaxed">
+            "{testimonial.quote}"
           </p>
         </div>
         
-        <div className="max-w-4xl mx-auto relative opacity-0 animate-fade-in [animation-delay:0.6s] [animation-fill-mode:forwards] [animation-play-state:paused]">
-          <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 border border-gray-100">
-            <div className="flex flex-col md:flex-row gap-8 items-start">
-              <div className="w-full md:w-2/3">
-                <div className="mb-6">
-                  <svg className="h-8 w-8 text-cascade-blue" fill="currentColor" viewBox="0 0 32 32" aria-hidden="true">
-                    <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z" />
-                  </svg>
-                </div>
-                <p className="text-lg md:text-xl italic mb-6">
-                  {testimonials[activeIndex].quote}
-                </p>
-                <div>
-                  <h4 className="font-serif text-xl">{testimonials[activeIndex].name}</h4>
-                  <p className="text-cascade-gray">{testimonials[activeIndex].title}</p>
-                </div>
-              </div>
-              <div className="w-full md:w-1/3 flex flex-col space-y-4">
-                <div className="bg-cascade-gray-light h-48 rounded-md flex items-center justify-center text-cascade-gray">
-                  <span className="text-4xl">⟁</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <button 
-                    onClick={prevTestimonial}
-                    className="w-12 h-12 rounded-full border border-cascade-gray-light flex items-center justify-center text-cascade-gray hover:text-cascade-blue hover:border-cascade-blue transition-colors"
-                  >
-                    <ArrowLeft size={20} />
-                  </button>
-                  <span className="text-cascade-gray">
-                    {activeIndex + 1}/{testimonials.length}
-                  </span>
-                  <button 
-                    onClick={nextTestimonial}
-                    className="w-12 h-12 rounded-full border border-cascade-gray-light flex items-center justify-center text-cascade-gray hover:text-cascade-blue hover:border-cascade-blue transition-colors"
-                  >
-                    <ArrowRight size={20} />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="mt-6 -mx-6 -mb-6 bg-[#0E3A6D]/70 p-4">
+          <p className="text-sm tracking-wide uppercase text-white font-semibold">
+            {testimonial.name}
+          </p>
+          <p className="text-sm tracking-wide uppercase text-white/80">
+            {testimonial.title}
+          </p>
         </div>
       </div>
-    </section>
+    </Card>
   );
 };
 
-const testimonials = [
-  {
-    quote: "Working with Trophic Cascade transformed my approach to leadership. I gained the confidence and strategic mindset to navigate complex enterprise deals with clarity and purpose. The ROI has been immeasurable.",
-    name: "Sarah Johnson",
-    title: "VP of Enterprise Sales, Tech Innovations Inc.",
-  },
-  {
-    quote: "The executive presence training has been game-changing. I'm now leading enterprise conversations with a level of gravitas and strategic insight that has dramatically improved our win rates and team morale.",
-    name: "Michael Roberts",
-    title: "Regional Sales Director, CloudForce Solutions",
-  },
-  {
-    quote: "Trophic Cascade's approach is unlike any leadership development I've experienced. They truly understand the unique challenges of enterprise software sales leadership, and their methods create lasting change.",
-    name: "David Chen",
-    title: "Chief Revenue Officer, DataStream",
-  },
-];
+const Testimonials = () => {
+  const sectionRef = useRef(null);
+  const cardsRef = useRef([]);
+  
+  useEffect(() => {
+    const section = sectionRef.current;
+    const cards = cardsRef.current;
+    
+    if (!section || cards.length === 0) return;
+    
+    // Create pinned section effect
+    const pinTrigger = ScrollTrigger.create({
+      trigger: section,
+      start: "top top",
+      end: "120vh",
+      pin: true,
+      pinSpacing: true,
+    });
+    
+    // Animate cards with stagger
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top 80%",
+      }
+    });
+    
+    tl.to(cards, {
+      opacity: 1,
+      y: 0,
+      duration: 0.7,
+      stagger: 0.3,
+      ease: "power2.out",
+      filter: "blur(0px)"
+    });
+    
+    // Add hover effects to all cards
+    cards.forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        gsap.to(card, {
+          scale: card.classList.contains('row-span-2') ? 1.06 : 1.04,
+          boxShadow: '0 20px 40px rgba(22, 117, 255, 0.4)',
+          borderColor: 'rgba(255, 255, 255, 0.3)',
+          duration: 0.3
+        });
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        gsap.to(card, {
+          scale: 1,
+          boxShadow: '0 8px 32px rgba(0, 14, 46, 0.35)',
+          borderColor: 'rgba(255, 255, 255, 0.15)',
+          duration: 0.3
+        });
+      });
+    });
+    
+    // Add pulse animation to featured card
+    const featuredCard = cards.find(card => card.classList.contains('row-span-2'));
+    if (featuredCard) {
+      gsap.to(featuredCard, {
+        boxShadow: '0 0 30px rgba(22, 117, 255, 0.6)',
+        repeat: -1,
+        yoyo: true,
+        duration: 6,
+        ease: "sine.inOut"
+      });
+    }
+    
+    // Create floating wolf watermark effect
+    const watermarkEl = document.createElement('div');
+    watermarkEl.classList.add('wolf-watermark');
+    watermarkEl.style.cssText = `
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60%;
+      height: 60%;
+      background-image: url('/images/wolf-profile.jpeg');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.05;
+      filter: grayscale(1) contrast(1.2);
+      z-index: 0;
+      pointer-events: none;
+    `;
+    section.appendChild(watermarkEl);
+    
+    gsap.to(watermarkEl, {
+      x: 40,
+      duration: 30,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut"
+    });
+    
+    // Clean up
+    return () => {
+      pinTrigger.kill();
+      cards.forEach(card => {
+        card.removeEventListener('mouseenter', () => {});
+        card.removeEventListener('mouseleave', () => {});
+      });
+      if (watermarkEl.parentNode) {
+        watermarkEl.parentNode.removeChild(watermarkEl);
+      }
+    };
+  }, []);
+  
+  return (
+    <section
+      id="testimonials"
+      ref={sectionRef}
+      className="relative min-h-[120vh] py-24"
+      style={{
+        background: 'linear-gradient(to bottom, #0E3A6D, #020617)',
+        overflowX: 'hidden'
+      }}
+    >
+      <div className="container mx-auto px-4 md:px-8 relative z-10">
+        <div className="max-w-4xl mx-auto text-center mb-16 opacity-0"
+             ref={el => el && gsap.to(el, {
+               opacity: 1,
+               duration: 1,
+               scrollTrigger: {
+                 trigger: el,
+                 start: "top 80%"
+               }
+             })}
+        >
+          <h2 className="font-serif text-4xl md:text-5xl mb-6 text-white">
+            What People Are <span className="text-gradient">Saying</span>
+          </h2>
+          <p className="text-lg text-[#D6DCE3]">
+            Hear how the <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#D6DCE3] via-white to-[#1675FF]">cascade</span> reshapes careers.
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 auto-rows-auto">
+          {testimonialsData.map((testimonial, index) => (
+            <div 
+              key={index}
+              ref={el => cardsRef.current[index] = el}
+              className={testimonial.featured ? "md:col-span-2" : ""}
+              style={{
+                filter: "blur(5px)",
+                transition: "all 0.4s ease"
+              }}
+            >
+              <TestimonialCard testimonial={testimonial} index={index} />
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <style jsx global>{`
+        @keyframes border-flow {
+          0% {
+            background-position: 0% 50%;
+          }
+          100% {
+            background-position: 100% 50%;
+          }
+        }
+        
+        .glass-card {
+          box-shadow: 0 8px 32px rgba(0, 14, 46, 0.35);
+          transition: all 0.3s ease-out;
+        }
+        
+        .glass-card:hover {
+          border-image: linear-gradient(
+            90deg, 
+            rgba(22, 117, 255, 0.7), 
+            rgba(255, 255, 255, 0.5),
+            rgba(22, 117, 255, 0.7)
+          ) 1;
+          border-image-slice: 1;
+          animation: border-flow 4s linear infinite;
+        }
+      `}</style>
+    </section>
+  );
+};
 
 export default Testimonials;
