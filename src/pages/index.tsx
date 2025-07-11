@@ -14,6 +14,7 @@ import Footer from '@/components/Footer';
 import HeroVideoOption1 from '@/components/HeroVideoOption1';
 import HeroVideoOption2 from '@/components/HeroVideoOption2';
 import HeroVideoOption3 from '@/components/HeroVideoOption3';
+import HeroAlternate from '@/components/HeroAlternate';
 
 const IndexVideo: React.FC = () => {
   useEffect(() => {
@@ -48,6 +49,7 @@ const IndexVideo: React.FC = () => {
       <Services />
       <Approach />
       <Footer />
+      <HeroAlternate />
 
       {/* Video Option Heroes */}
       <HeroVideoOption1 />

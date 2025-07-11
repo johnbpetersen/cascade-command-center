@@ -6,7 +6,7 @@ const Hero = () => {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center pt-16 pb-24 bg-cascade-off-white"
+      className="hero relative min-h-screen flex items-center pt-16 pb-24 bg-cascade-off-white"
     >
       {/* Three.js flowing threads background */}
       <CanvasBackground />
@@ -28,7 +28,7 @@ const Hero = () => {
               <span className="block text-black">
                 Elevate Your Leadership.
               </span>
-              <span className="block text-gradient">
+              <span className="block bg-gradient-to-r from-cascade-blue to-cascade-green bg-clip-text text-transparent">
                 Transform Your Impact.
               </span>
             </h1>
@@ -46,19 +46,14 @@ const Hero = () => {
             >
               <a
                 href="#services"
-                className="btn-primary flex items-center justify-center gap-2 group"
+                className="hero-btn-secondary inline-flex items-center justify-center gap-2"
+                style={{ backgroundColor: '#27ae60', color: 'white' }}
               >
                 Book a Free Consultation
                 <ArrowRight
                   size={18}
                   className="transition-transform group-hover:translate-x-1"
                 />
-              </a>
-              <a
-                href="#testimonials"
-                className="text-cascade-gray-dark hover:text-cascade-blue
-                           transition-colors duration-200 font-medium flex items-center gap-1"
-              >
               </a>
             </div>
           </div>

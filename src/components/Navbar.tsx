@@ -44,7 +44,7 @@ const Navbar = () => {
         <div className="hidden md:flex items-center space-x-4">
           <a href="#bio" className="nav-link">Bio</a>
           <a href="#credentials" className="nav-link">Credentials</a>
-          <a href="#contact" className="btn-primary">Contact</a>
+          <a href="#contact" className="btn-secondary">Contact</a>
         </div>
         
         {/* Mobile menu button */}
@@ -62,7 +62,7 @@ const Navbar = () => {
           <div className="container-custom flex flex-col space-y-3">
             <a href="#bio" className="nav-link py-2" onClick={() => setIsMenuOpen(false)}>Bio</a>
             <a href="#credentials" className="nav-link py-2" onClick={() => setIsMenuOpen(false)}>Credentials</a>
-            <a href="#contact" className="btn-primary inline-block text-center" onClick={() => setIsMenuOpen(false)}>Contact</a>
+            <a href="#contact" className="btn-secondary inline-block text-center" onClick={() => setIsMenuOpen(false)}>Contact</a>
           </div>
         </div>
       )}

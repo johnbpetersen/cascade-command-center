@@ -1,11 +1,11 @@
-import React from 'react'
-import { ArrowRight } from 'lucide-react'
+import React from 'react';
+import { ArrowRight } from 'lucide-react';
 
 const HeroVideo: React.FC = () => {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center pt-16 pb-24 bg-cascade-off-white overflow-hidden"
+      className="hero relative min-h-screen flex items-center pt-16 pb-24 bg-cascade-off-white overflow-hidden"
     >
       {/* full-screen looping video */}
       <video
@@ -54,7 +54,7 @@ const HeroVideo: React.FC = () => {
             >
               <a
                 href="#services"
-                className="btn-primary flex items-center justify-center gap-2 group"
+                className="hero-btn-secondary flex items-center justify-center gap-2 group"
               >
                 Book a Free Consultation
                 <ArrowRight
@@ -67,7 +67,7 @@ const HeroVideo: React.FC = () => {
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default HeroVideo
+export default HeroVideo;
